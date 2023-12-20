@@ -1,0 +1,9 @@
+{% extends 'polls/base.html' %}
+
+{% block title %} Poll {% endblock %}
+
+{% block body %}
+    <h1>{{ article.title }}</h1>
+    <p>{{ article.text }}</p>
+    <p>{{ article.author }}</p>
+{% endblock %}

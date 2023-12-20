@@ -1,0 +1,12 @@
+{% extends 'polls/base.html' %}
+
+{% block title %}  {% endblock %}
+
+{% block body %}
+    <h1>Смешные собеседования: истории ИТ-рекрутеров</h1>
+    <ol>
+        {% for article in articles %}
+            <li><a href="{% url 'articles:detail' article.id %}">{{ article.title }}</a></li>
+        {% endfor %}
+    </ol>
+{% endblock %}
