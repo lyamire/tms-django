@@ -3,6 +3,10 @@
 {% block title %} {% endblock %}
 
 {% block body %}
+    <p>
+        <a href="{% url 'polls:create' %}">create new question</a>
+    </p>
+
     {% if latest_question_list %}
         <ul>
         {% for question in latest_question_list %}
@@ -12,4 +16,5 @@
     {% else %}
         <p>No polls are available.</p>
     {% endif %}
+
 {% endblock %}
