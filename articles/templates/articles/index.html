@@ -5,8 +5,11 @@
 {% block body %}
     <h1>Смешные собеседования: истории ИТ-рекрутеров</h1>
     <ol>
-        {% for article in articles %}
+        {% for article in articles|dictsort:'title' %}
             <li><a href="{% url 'articles:detail' article.id %}">{{ article.title }}</a></li>
         {% endfor %}
     </ol>
+    <p>
+        <a href="{% url 'articles:create_article' %}">create new article</a>
+    </p>
 {% endblock %}

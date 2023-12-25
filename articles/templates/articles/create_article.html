@@ -1,0 +1,9 @@
+{% extends 'articles/base.html' %}
+
+{% block body %}
+    <form action="{% url 'articles:create_article' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="create" />
+    </form>
+{% endblock %}

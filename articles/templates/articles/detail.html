@@ -3,7 +3,14 @@
 {% block title %} Poll {% endblock %}
 
 {% block body %}
+    <a href="{% url 'articles:index' %}">Go to main page</a>
     <h1>{{ article.title }}</h1>
     <p>{{ article.text }}</p>
     <p>{{ article.author }}</p>
+    <p><strong>Likes: {{ article.like_count }}</strong></p>
+    <form method="post" action="{% url 'articles:like' article.id %}">
+        {% csrf_token %}
+        <input type="hidden" name="article_id" value="{{ article.id }}"/>
+        <input type="submit" value="like"/>
+    </form>
 {% endblock %}

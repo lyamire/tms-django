@@ -1,0 +1,14 @@
+{% extends 'shop/base.html' %}
+
+{% block title %} Category {% endblock %}
+
+{% block body %}
+    <a href="{% url 'shop:index' %}">Go to main page</a>
+    <h1>{{ category.name }}</h1>
+    <ul>
+        {% for product in products|dictsort:'name' %}
+            <li><a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

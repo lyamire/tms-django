@@ -1,0 +1,10 @@
+{% extends 'shop/base.html' %}
+
+{% block title %} Product {% endblock %}
+
+{% block body %}
+    <a href="{% url 'shop:index' %}">Go to main page</a>
+    <h1>{{ product.name }}</h1>
+    <p><a href="{% url 'shop:category' product.category.id %}">{{ product.category.name }}</a></p>
+    <p>{{ product.description }}</p>
+{% endblock %}
