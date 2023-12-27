@@ -1,6 +1,5 @@
-from django.http import HttpRequest
 from django.shortcuts import redirect, render, get_object_or_404
-from django.contrib import messages
+from django.utils import timezone
 
 from .forms import QuestionForm
 from .models import Question, Choice
@@ -14,7 +13,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """Return the last five published questions."""
-        return Question.objects.filter(status=Question.Status.APPROVED).order_by("-pub_date")[:5]
+        return Question.objects.filter(status=Question.Status.APPROVED, pub_date__lte=timezone.now()).order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
@@ -22,8 +21,7 @@ class DetailView(generic.DetailView):
     template_name = "polls/detail.html"
 
     def get_object(self, queryset=None):
-        return Question.objects.filter(status=Question.Status.APPROVED).get(id=self.kwargs['pk'])
-
+        return get_object_or_404(Question, id=self.kwargs['pk'], status=Question.Status.APPROVED, pub_date__lte=timezone.now())
 
 def vote(request, question_id: int):
     question = get_object_or_404(Question, id=question_id, status=Question.Status.APPROVED)
