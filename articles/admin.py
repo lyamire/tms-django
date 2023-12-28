@@ -1,4 +1,15 @@
 from django.contrib import admin
 from .models import Article
 # Register your models here.
-admin.site.register(Article)
+
+class ArticleAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['title', 'author', 'like_count', 'is_popular']}),
+        ('Date information', {'fields': ['text']})
+    ]
+    readonly_fields = ['like_count', 'is_popular']
+    search_fields = ['title', 'author', 'text']
+    list_display = ['title', 'author', 'is_popular']
+
+
+admin.site.register(Article, ArticleAdmin)
