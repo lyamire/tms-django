@@ -2,8 +2,14 @@
 
 {% block title %} Product {% endblock %}
 
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb" style="margin-right: 30px;"><a href="{{ request.path }}">{{ product.category.name }}</a></li>
+    <li class="breadcrumb" style="margin-right: 30px;"><a href="{{ request.path }}">{{ product.name }}</a></li>
+{% endblock %}
+
+
 {% block body %}
-    <a href="{% url 'shop:index' %}">Go to main page</a>
     <h1>{{ product.name }}</h1>
     <p><a href="{% url 'shop:category' product.category.id %}">{{ product.category.name }}</a></p>
     <p>{{ product.description }}</p>

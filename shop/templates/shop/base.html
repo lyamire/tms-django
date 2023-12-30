@@ -7,6 +7,14 @@
     </title>
 </head>
 <body>
-    {% block body %}{% endblock %}
+    <nav class="breadcrumbs">
+    <ul style="list-style-type: disclosure-closed; display: flex;">
+        {% block breadcrumbs %}
+            <li class="breadcrumb" style="margin-right: 30px;"><a href="{% url 'shop:index' %}">Главная</a></li>
+        {% endblock %}
+    </ul>
+    </nav>
+    {% block body %}
+    {% endblock %}
 </body>
 </html>

@@ -1,9 +1,13 @@
-{% extends 'polls/base.html' %}
+{% extends 'articles/base.html' %}
 
-{% block title %} Poll {% endblock %}
+{% block title %} Article {% endblock %}
 
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb"><a href="{{ request.path }}">{{ article.title }}</a></li>
+{% endblock %}
 {% block body %}
-    <a href="{% url 'articles:index' %}">Go to main page</a>
+
     <h1>{{ article.title }}</h1>
     <p>{{ article.text }}</p>
     <p>{{ article.author }}</p>

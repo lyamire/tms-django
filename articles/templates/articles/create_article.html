@@ -1,5 +1,12 @@
 {% extends 'articles/base.html' %}
 
+{% block title %} Create new article {% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb"><a href="{{ request.path }}">new article</a></li>
+{% endblock %}
+
 {% block body %}
     <form action="{% url 'articles:create_article' %}" method="post">
         {% csrf_token %}
