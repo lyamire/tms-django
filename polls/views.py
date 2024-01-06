@@ -50,7 +50,7 @@ def create_question(request):
             question.save()
             for choice_text in form.cleaned_data['choices'].split('\n'):
                 question.choices.create(choice_text=choice_text, votes=0)
-            return redirect('polls:detail', question.id)
+            return redirect('polls:index')
     else:
         form = QuestionForm()
     return render(request, 'polls/create_question.html', {'form': form})
