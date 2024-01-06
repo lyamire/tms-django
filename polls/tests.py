@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
+from django.db import transaction
 
 from .models import Question
 # Create your tests here.
@@ -51,3 +52,17 @@ class QuestionDetailViewTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
 
+@transaction.atomic
+def create_question(raising):
+    Question.objects.create(pub_date=timezone.now())
+    if raising:
+        raise Exception()
+    Question.objects.create(pub_date=timezone.now())
+
+class TestTransaction(TestCase):
+    def test_transaction(self):
+        self.assertEqual(Question.objects.count(), 0)
+        create_question(False)
+        self.assertEqual(Question.objects.count(), 2)
+        self.assertRaises(Exception, lambda: create_question(True))
+        self.assertEqual(Question.objects.count(), 2)
