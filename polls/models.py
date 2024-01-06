@@ -12,7 +12,7 @@ class Question(models.Model):
         APPROVED = 'AP', _('Approved')
 
     question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField(verbose_name='Date published')
+    pub_date = models.DateTimeField(verbose_name='Date published', default=datetime.now(UTC), db_index=True)
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.NEW)
 
     @admin.display(
@@ -20,10 +20,9 @@ class Question(models.Model):
         description='Published recently?',
         ordering='pub_date'
     )
-
     def was_published_recently(self):
-        now = timezone.now()
-        return now - timezone.timedelta(days=1) <= self.pub_date <= now
+        now = datetime.now(UTC)
+        return (now - timezone.timedelta(days=1)) <= self.pub_date <= now
 
     def __str__(self):
         return self.question_text
