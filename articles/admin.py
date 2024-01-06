@@ -4,12 +4,12 @@ from .models import Article
 
 class ArticleAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['title', 'author', 'like_count', 'is_popular']}),
+        (None, {'fields': ['title', 'authors', 'like_count', 'is_popular']}),
         ('Date information', {'fields': ['text']})
     ]
     readonly_fields = ['like_count', 'is_popular']
-    search_fields = ['title', 'author', 'text']
-    list_display = ['title', 'author', 'is_popular']
+    search_fields = ['title', 'authors', 'text']
+    list_display = ['title', 'is_popular']
 
 
 admin.site.register(Article, ArticleAdmin)

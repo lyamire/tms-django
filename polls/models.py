@@ -1,5 +1,6 @@
 from datetime import datetime, UTC
 
+import django
 from django.contrib import admin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -13,7 +14,7 @@ class Question(models.Model):
         APPROVED = 'AP', _('Approved')
 
     question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField(verbose_name='Date published', default=datetime.now(UTC), db_index=True)
+    pub_date = models.DateTimeField(verbose_name='Date published', default=django.utils.timezone.now, db_index=True)
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.NEW)
 
     @admin.display(

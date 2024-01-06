@@ -13,7 +13,6 @@ class Article(models.Model):
 
     title = models.CharField(max_length=100)
     text = models.TextField()
-    author = models.CharField(max_length=100)
     like_count = models.IntegerField(default=0)
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.NEW)
 
@@ -27,3 +26,12 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+class Author(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    date_of_birth = models.DateField()
+    articles = models.ManyToManyField(Article, related_name='authors')
+
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'

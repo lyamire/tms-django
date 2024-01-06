@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 
 from .forms import ArticleForm
-from .models import Article
+from .models import Article, Author
+
+
 # Create your views here.
 
 def index(request):
@@ -12,8 +14,10 @@ def index(request):
     return render(request, 'articles/index.html', context)
 
 def detail(request, article_id):
-    article = get_object_or_404(Article, id=article_id, status=Article.Status.APPROVED)
-    return render(request, 'articles/detail.html', {'article': article})
+    article: Article = get_object_or_404(Article, id=article_id, status=Article.Status.APPROVED)
+
+    authors = article.authors.all()
+    return render(request, 'articles/detail.html', {'article': article, 'authors': authors})
 
 def like(request, article_id):
     article = get_object_or_404(Article, id=article_id, status=Article.Status.APPROVED)
@@ -37,3 +41,7 @@ def create_article(request):
     else:
         form = ArticleForm()
     return render(request, 'articles/create_article.html', {'form': form})
+
+def author_detail(request, author_id):
+    author = get_object_or_404(Author, id=author_id)
+    return render(request, 'articles/author_detail.html', {'author': author, 'articles': author.articles.all()})
