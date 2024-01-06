@@ -4,9 +4,9 @@ from .models import Article, Author
 
 # Register your models here.
 
-# class AuthorInLine(admin.TabularInline):
-#     model = Author
-#     extra = 1
+class AuthorInLine(admin.TabularInline):
+    model = Author.articles.through
+    extra = 1
 
 class ArticleAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -16,7 +16,7 @@ class ArticleAdmin(admin.ModelAdmin):
     readonly_fields = ['like_count', 'is_popular']
     search_fields = ['title', 'text']
     list_display = ['title', 'is_popular']
-    # inlines = [AuthorInLine]
+    inlines = [AuthorInLine]
 
 
 admin.site.register(Article, ArticleAdmin)
