@@ -4,7 +4,8 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    <li class="breadcrumb"><a href="{{ request.path }}">{{ author.first_name }} {{ author.last_name }}</a></li>
+    <li style="margin-right: 20px;" class="breadcrumb"><a href="{% url 'articles:authors_list' %}">Авторы</a></li>
+    <li style="margin-right: 20px;" class="breadcrumb"><a href="{{ request.path }}">{{ author.first_name }} {{ author.last_name }}</a></li>
 {% endblock %}
 {% block body %}
 

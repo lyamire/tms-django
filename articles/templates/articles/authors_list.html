@@ -1,0 +1,17 @@
+{% extends 'articles/base.html' %}
+
+{% block title %} Author {% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb"><a href="{{ request.path }}"> Авторы </a></li>
+{% endblock %}
+{% block body %}
+
+    <h1> Авторы </h1>
+    <ul>
+        {% for author in authors %}
+            <li><a href="{% url 'articles:author_detail' author.id %}">{{ author.first_name }} {{ author.last_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

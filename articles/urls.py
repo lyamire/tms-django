@@ -8,4 +8,5 @@ urlpatterns = [
     path("<int:article_id>/like", views.like, name='like'),
     path("create_article", views.create_article, name="create_article"),
     path("author/<int:author_id>", views.author_detail, name='author_detail'),
+    path('authors/', views.authors_list, name='authors_list'),
 ]

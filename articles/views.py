@@ -50,3 +50,7 @@ def create_article(request):
 def author_detail(request, author_id):
     author = get_object_or_404(Author, id=author_id)
     return render(request, 'articles/author_detail.html', {'author': author, 'articles': author.articles.all()})
+
+def authors_list(request):
+    authors = Author.objects.all()
+    return render(request,'articles/authors_list.html', {'authors': authors})
