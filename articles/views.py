@@ -31,9 +31,14 @@ def create_article(request):
         if form.is_valid():
             title = form.cleaned_data['title']
             text = form.cleaned_data['text']
-            author = form.cleaned_data['author']
-            article = Article(title=title, text=text, author=author)
+
+            article = Article(title=title, text=text)
             article.save()
+
+            authors_raw = form.cleaned_data['authors']
+            article.authors.set(authors_raw)
+            article.save()
+
             messages.success(
                 request, 'Your article is added and will be '
                          'displayed once reviewed by administrator')
