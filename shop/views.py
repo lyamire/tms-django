@@ -6,9 +6,10 @@ from shop.models import Category, Product
 # Create your views here.
 def index(request):
     context = {
-        'products': Product.objects.all(),
+        # 'products': Product.objects.all(),
         'categories': Category.objects.all()
     }
+    Category.objects.prefetch_related(Product.__name__)
     return render(request, 'shop/index.html', context)
 
 def detail(request, product_id):
