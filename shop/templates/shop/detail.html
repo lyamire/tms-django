@@ -13,4 +13,10 @@
     <h1>{{ product.name }}</h1>
     <p><a href="{% url 'shop:category' product.category.id %}">{{ product.category.name }}</a></p>
     <p>{{ product.description }}</p>
+    <p>{{ product.price }}</p>
+    <form action="{% url 'shop:add_to_cart' product.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Добавить в корзину</button>
+    </form>
+
 {% endblock %}

@@ -10,10 +10,13 @@
     {% if user.is_authenticated %}
         <form action="{% url 'logout' %}?next={{ request.path }}" method="post">
             {% csrf_token %}
-        <input type="submit" value="Logout" class="btn btn-danger"/>
+            <span>Hi, {{ request.user.username | title }}</span>
+            <span><a href="{% url 'shop:cart' %}">Корзина</a></span>
+            <input type="submit" value="Logout" class="btn btn-danger"/>
         </form>
     {% else %}
         <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-info">Login</a>
+        <a href="{% url 'register' %}?next={{ request.path }}" class="btn btn-info">Register</a>
     {% endif %}
 
     <nav class="breadcrumbs">

@@ -1,0 +1,23 @@
+{% extends 'shop/base.html' %}
+
+{% block title %} Cart {% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb"><a href="{{ request.path }}">Моя корзина</a></li>
+{% endblock %}
+
+{% block body %}
+    {% if entries %}
+        <h1>Заказ: </h1>
+        <ul>
+            {% for entry in entries %}
+                <li><a href="{% url 'shop:detail' entry.product.id %}">{{ entry.product.name }}</a> - {{ entry.count }} - {{ entry.product.price }}</li>
+            {% endfor %}
+        </ul>
+        <p>Итого: {{ total_price }}</p>
+    {% else %}
+        <p>Корзина пуста</p>
+    {% endif %}
+
+{% endblock %}
