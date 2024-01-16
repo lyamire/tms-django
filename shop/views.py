@@ -81,3 +81,13 @@ def cart(request):
         return render(request, 'shop/cart.html', {})
     total_price = sum([(entry.product.price * entry.count) for entry in entries])
     return render(request, 'shop/cart.html', {'entries': entries, 'total_price': total_price})
+
+@login_required
+def cart_delete(request):
+    profile: Profile = Profile.objects.filter(user=request.user).first()
+
+    orders = profile.orders.filter(status=StatusOrder.INITIAL)
+    for order in orders:
+        order.delete()
+
+    return redirect('shop:cart')

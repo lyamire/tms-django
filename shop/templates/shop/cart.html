@@ -10,14 +10,31 @@
 {% block body %}
     {% if entries %}
         <h1>Заказ: </h1>
-        <ul>
+        <table>
+            <tr>
+                <th>Товар</th>
+                <th>Количество</th>
+                <th>Цена</th>
+            </tr>
             {% for entry in entries %}
-                <li><a href="{% url 'shop:detail' entry.product.id %}">{{ entry.product.name }}</a> - {{ entry.count }} - {{ entry.product.price }}</li>
+                <tr>
+                    <td><a href="{% url 'shop:detail' entry.product.id %}">{{ entry.product.name }}</a></td>
+                    <td>{{ entry.count }}</td>
+                    <td>{{ entry.product.price }}</td>
+                </tr>
             {% endfor %}
-        </ul>
-        <p>Итого: {{ total_price }}</p>
+            <tr>
+                <td colspan="2">Итого:</td>
+                <td>{{ total_price }}</td>
+            </tr>
+        </table>
+        <form action="{% url 'shop:cart_delete' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Clean cart" class="btn btn-danger"/>
+        </form>
     {% else %}
         <p>Корзина пуста</p>
     {% endif %}
+
 
 {% endblock %}

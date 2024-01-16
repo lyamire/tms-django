@@ -5,6 +5,8 @@
     <title>
         {% block title %} Shop App {% endblock %}
     </title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'shop/style.css' %}">
 </head>
 <body>
     {% if user.is_authenticated %}
