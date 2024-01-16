@@ -53,7 +53,6 @@ def add_to_cart(request, product_id):
 
     profile: Profile = Profile.objects.get_or_create(user=request.user)[0]
 
-    # TODO: method get_shopping_cart
     active_order = profile.orders.filter(status=StatusOrder.INITIAL).first()
     if not active_order:
         active_order = Order.objects.create(profile=profile, status=StatusOrder.INITIAL)
