@@ -13,6 +13,7 @@
         <form action="{% url 'logout' %}?next={{ request.path }}" method="post">
             {% csrf_token %}
             <span>Hi, {{ request.user.username | title }}</span>
+            <span><a href="{% url 'shop:profile' %}">Профиль</a></span>
             <span><a href="{% url 'shop:cart' %}">Корзина</a></span>
             <input type="submit" value="Logout" class="btn btn-danger"/>
         </form>

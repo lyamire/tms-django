@@ -1,0 +1,30 @@
+{% extends 'shop/base.html' %}
+
+{% block title %} Product {% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb" style="margin-right: 30px;"><a href="{{ request.path }}">Профиль</a></li>
+{% endblock %}
+
+{% block body %}
+    <h3>Личные данные</h3>
+{#    <p>Имя: {{ profile.user.first_name }} Фамилия: {{ profile.user.last_name }}</p>#}
+{#    <p>Эл. почта: {{ profile.user.email }}</p>#}
+    <form action="{% url 'shop:profile' %}" method="post">
+        {% csrf_token %}
+        <label>
+            <input type="text" name="first_name" value="{{ profile.user.first_name }}" />
+            <input type="text" name="last_name" value="{{ profile.user.last_name }}" />
+            <input type="email" name="email" value="{{ profile.user.email }}" />
+        </label>
+        <input type="submit" value="change" class="btn btn-danger"/>
+    </form>
+    <h3>Последние заказы:</h3>
+    <ul>
+        {% for order in orders %}
+            <li><a href="{% url 'shop:order_details' order.id %}">Номер заказа: {{ order.id }}. Статус заказа:{{ order.get_order_status }}. Сумма: {{ order.get_total_price }}. Количество товаров: {{ order.get_products_count }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'shop:profile_history_of_orders' %}">История заказов</a>
+{% endblock %}

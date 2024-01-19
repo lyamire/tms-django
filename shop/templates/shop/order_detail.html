@@ -1,0 +1,38 @@
+{% extends 'shop/base.html' %}
+
+{% block title %} Cart {% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb" style="margin-right: 30px"><a href="{% url 'shop:profile' %}">Профиль</a></li>
+    <li class="breadcrumb" style="margin-right: 30px"><a href="{% url 'shop:profile_history_of_orders' %}">История заказов</a></li>
+    <li class="breadcrumb" style="margin-right: 30px"><a href="{{ request.path }}">Заказ № {{ order.id }}</a></li>
+{% endblock %}
+
+{% block body %}
+    <h1>Заказ № {{ order.id }} </h1>
+    <p>Статус заказа: {{ order.get_order_status }}</p>
+    <table>
+        <tr>
+            <th>Товар</th>
+            <th>Количество</th>
+            <th>Цена</th>
+        </tr>
+        {% for entry in entries %}
+            <tr>
+                <td><a href="{% url 'shop:detail' entry.product.id %}">{{ entry.product.name }}</a></td>
+                <td>{{ entry.count }}</td>
+                <td>{{ entry.product.price }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="1">Итого:</td>
+            <td colspan="2">{{ order.get_total_price }}</td>
+        </tr>
+    </table>
+    <form action="{% url 'shop:reorder' order.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Повторить заказ" class="btn btn-danger"/>
+    </form>
+
+{% endblock %}

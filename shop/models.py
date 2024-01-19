@@ -27,9 +27,10 @@ class OrderEntry(models.Model):
     def __str__(self):
         return f'{self.product} {self.count}'
 
+
 class StatusOrder(models.TextChoices):
     INITIAL = "IN", _("Initial")
-    PAID = "PA", _("Paid")
+    COMPLETED = "CO", _("Completed")
     DELIVERED = "DE", _("Delivered")
 
 
@@ -39,6 +40,22 @@ class Order(models.Model):
 
     def __str__(self):
         return f'{self.profile} - {self.status}'
+
+    def get_total_price(self):
+        return sum(order_entry.product.price * order_entry.count for order_entry in self.order_entries.all())
+
+    def get_products_count(self):
+        return sum(order_entry.count for order_entry in self.order_entries.all())
+
+    def get_order_status(self):
+        if self.status == StatusOrder.INITIAL:
+            return 'INITIAL'
+        elif self.status == StatusOrder.COMPLETED:
+            return 'COMPLETED'
+        elif self.status == StatusOrder.DELIVERED:
+            return 'DELIVERED'
+        else:
+            return 'UNKNOWN'
 
 class Profile(models.Model):
    user: User = models.OneToOneField(User, on_delete=models.CASCADE)

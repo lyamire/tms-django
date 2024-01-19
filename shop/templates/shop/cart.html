@@ -15,22 +15,36 @@
                 <th>Товар</th>
                 <th>Количество</th>
                 <th>Цена</th>
+                <th>Удалить</th>
             </tr>
             {% for entry in entries %}
                 <tr>
                     <td><a href="{% url 'shop:detail' entry.product.id %}">{{ entry.product.name }}</a></td>
-                    <td>{{ entry.count }}</td>
+                    <td>
+                        <form action="{% url 'shop:update_product_from_cart' entry.product.id %}" method="post" >
+                            {% csrf_token %}
+                            <label>
+                                <input type="number" name="count" min="1" value="{{ entry.count }}" />
+                            </label>
+                            <input type="submit" value="Change count" class="btn btn-danger"/>
+                        </form>
+                    </td>
                     <td>{{ entry.product.price }}</td>
+                    <td><a href="{% url 'shop:remove_product_from_cart' entry.product.id %}">delete</a></td>
                 </tr>
             {% endfor %}
             <tr>
                 <td colspan="2">Итого:</td>
-                <td>{{ total_price }}</td>
+                <td colspan="2">{{ total_price }}</td>
             </tr>
         </table>
         <form action="{% url 'shop:cart_delete' %}" method="post">
             {% csrf_token %}
-            <input type="submit" value="Clean cart" class="btn btn-danger"/>
+            <input type="submit" value="Очистить корзину" class="btn btn-danger"/>
+        </form>
+        <form action="{% url 'shop:cart_submit' %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Оформить заказ" class="btn btn-danger"/>
         </form>
     {% else %}
         <p>Корзина пуста</p>

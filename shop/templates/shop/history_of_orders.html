@@ -1,0 +1,36 @@
+{% extends 'shop/base.html' %}
+
+{% block title %} History of orders {% endblock %}
+
+{% block breadcrumbs %}
+    {{ block.super }}
+    <li class="breadcrumb" style="margin-right: 30px"><a href="{% url 'shop:profile' %}">Профиль</a></li>
+    <li class="breadcrumb" style="margin-right: 30px"><a href="{{ request.path }}">История заказов</a></li>
+{% endblock %}
+
+{% block body %}
+    <h3>Заказы:</h3>
+    <ul>
+        {% for order in orders %}
+            <li><a href="{% url 'shop:order_details' order.id %}">Номер заказа: {{ order.id }}. Статус заказа:{{ order.get_order_status }}. Сумма: {{ order.get_total_price }}. Количество товаров: {{ order.get_products_count }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_object.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_object.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_object.number }} of {{ page_object.paginator.num_pages }}.
+            </span>
+
+            {% if page_object.has_next %}
+                <a href="?page={{ page_object.next_page_number }}">next</a>
+                <a href="?page={{ page_object.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
