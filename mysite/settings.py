@@ -31,6 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'api',
+    'rest_framework',
+    'corsheaders',
+    'debug_toolbar',
     'articles',
     'shop',
     'polls',
@@ -50,6 +54,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -145,3 +152,11 @@ if not DEBUG:
             "LOCATION": "redis://127.0.0.1:6379"
         }
     }
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

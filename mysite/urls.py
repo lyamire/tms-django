@@ -28,4 +28,6 @@ urlpatterns = [
     path('accounts/login/', LoginView.as_view(), name='login'),
     path('accounts/logout/', LogoutView.as_view(), name='logout'),
     path('accounts/register', views.register, name='register'),
+    path('api/', include('api.urls')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
