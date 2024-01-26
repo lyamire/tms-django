@@ -3,13 +3,17 @@
 {% block title %}  {% endblock %}
 
 {% block body %}
-    <h1><a href="{% url 'shop:products' %}">Products</a></h1>
-    {% for category in categories|dictsort:'name' %}
-        <h2><a href="{% url 'shop:category' category.id %}">{{ category.name }}</a></h2>
-        <ul>
-            {% for product in category.products.all|dictsort:'name' %}
-                <li><a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a></li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
+    <div class="header_index"><a href="{% url 'shop:products' %}">Products</a></div>
+    <div class="row">
+        {% for category in categories|dictsort:'name' %}
+            <div class="column">
+                <h2><a href="{% url 'shop:category' category.id %}">{{ category.name }}</a></h2>
+                <ul>
+                    {% for product in category.products.all|dictsort:'name' %}
+                        <li><a href="{% url 'shop:detail' product.id %}">{{ product.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -4,9 +4,9 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    <li class="breadcrumb" style="margin-right: 30px"><a href="{% url 'shop:profile' %}">Профиль</a></li>
-    <li class="breadcrumb" style="margin-right: 30px"><a href="{% url 'shop:profile_history_of_orders' %}">История заказов</a></li>
-    <li class="breadcrumb" style="margin-right: 30px"><a href="{{ request.path }}">Заказ № {{ order.id }}</a></li>
+    <li class="breadcrumb"><a href="{% url 'shop:profile' %}">Профиль</a></li>
+    <li class="breadcrumb"><a href="{% url 'shop:profile_history_of_orders' %}">История заказов</a></li>
+    <li class="breadcrumb"><a href="{{ request.path }}">Заказ № {{ order.id }}</a></li>
 {% endblock %}
 
 {% block body %}

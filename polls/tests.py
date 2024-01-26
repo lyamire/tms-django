@@ -1,3 +1,4 @@
+import pytest
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
@@ -22,7 +23,7 @@ class QuestionModelTest(TestCase):
         question = Question(pub_date=pub_date)
         self.assertFalse(question.was_published_recently())
 
-def create_question(question_text, days):
+def create_question(question_text: str, days: int) -> Question:
     pub_date = timezone.now() + timezone.timedelta(days=days)
     return Question.objects.create(question_text=question_text, pub_date=pub_date, status=Question.Status.APPROVED)
 
@@ -53,7 +54,7 @@ class QuestionDetailViewTests(TestCase):
         self.assertContains(response, past_question.question_text)
 
 @transaction.atomic
-def create_question(raising):
+def create_question_for_transaction(raising):
     Question.objects.create(pub_date=timezone.now())
     if raising:
         raise Exception()
@@ -62,7 +63,7 @@ def create_question(raising):
 class TestTransaction(TestCase):
     def test_transaction(self):
         self.assertEqual(Question.objects.count(), 0)
-        create_question(False)
+        create_question_for_transaction(False)
         self.assertEqual(Question.objects.count(), 2)
-        self.assertRaises(Exception, lambda: create_question(True))
+        self.assertRaises(Exception, lambda: create_question_for_transaction(True))
         self.assertEqual(Question.objects.count(), 2)

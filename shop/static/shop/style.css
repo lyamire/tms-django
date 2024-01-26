@@ -7,6 +7,25 @@ table {
   min-height: 100px;
 }
 
-li .breadcrumbs{
+.breadcrumbs li {
   margin-right: 30px;
 }
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 15px;
+}
+.row {
+  display: flex;
+}
+.column h2 {
+  text-align: center;
+}
+.header_index {
+  text-align: center;
+  padding: 10px;
+  font-size: 40px;
+  font-weight: bolder;
+}
+
+

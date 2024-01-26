@@ -4,13 +4,11 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    <li class="breadcrumb" style="margin-right: 30px;"><a href="{{ request.path }}">Профиль</a></li>
+    <li class="breadcrumb"><a href="{{ request.path }}">Профиль</a></li>
 {% endblock %}
 
 {% block body %}
     <h3>Личные данные</h3>
-{#    <p>Имя: {{ profile.user.first_name }} Фамилия: {{ profile.user.last_name }}</p>#}
-{#    <p>Эл. почта: {{ profile.user.email }}</p>#}
     <form action="{% url 'shop:profile' %}" method="post">
         {% csrf_token %}
         <label>

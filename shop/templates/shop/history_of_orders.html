@@ -4,8 +4,8 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    <li class="breadcrumb" style="margin-right: 30px"><a href="{% url 'shop:profile' %}">Профиль</a></li>
-    <li class="breadcrumb" style="margin-right: 30px"><a href="{{ request.path }}">История заказов</a></li>
+    <li class="breadcrumb"><a href="{% url 'shop:profile' %}">Профиль</a></li>
+    <li class="breadcrumb"><a href="{{ request.path }}">История заказов</a></li>
 {% endblock %}
 
 {% block body %}

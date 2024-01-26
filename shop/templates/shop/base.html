@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'shop/style.css' %}">
 </head>
 <body>
+    <div class='top'></div>
     {% if user.is_authenticated %}
         <form action="{% url 'logout' %}?next={{ request.path }}" method="post">
             {% csrf_token %}

@@ -4,8 +4,8 @@
 
 {% block breadcrumbs %}
     {{ block.super }}
-    <li class="breadcrumb" style="margin-right: 30px;"><a href="{% url 'shop:category' product.category.id %}">{{ product.category.name }}</a></li>
-    <li class="breadcrumb" style="margin-right: 30px;"><a href="{{ request.path }}">{{ product.name }}</a></li>
+    <li class="breadcrumb"><a href="{% url 'shop:category' product.category.id %}">{{ product.category.name }}</a></li>
+    <li class="breadcrumb"><a href="{{ request.path }}">{{ product.name }}</a></li>
 {% endblock %}
 
 
