@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import action, api_view
 from rest_framework.request import Request
 
 from articles.models import Article, Author
@@ -13,6 +13,7 @@ from .serializers import QuestionSerializer, ChoiceSerializer, ArticleSerializer
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all().prefetch_related('choices')
     serializer_class = QuestionSerializer
+
 
 class ChoiceViewSet(viewsets.ModelViewSet):
     queryset = Choice.objects.all()

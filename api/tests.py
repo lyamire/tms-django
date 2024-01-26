@@ -149,18 +149,18 @@ class ArticleViewTests(TestCase):
         self.assertEqual(response.data["like_count"], self.data["like_count"])
         self.assertEqual(response.data["status"], self.data["status"])
 
-    # def test_update_article(self):
-    #     article_old = Article.objects.create(
-    #         title="sdfsd fsfsdfs dsd fsd f sdfs ",
-    #         text="ksdkjhs ksdjhksjdh kjsdksjdk jfh skdjhf",
-    #         like_count=42,
-    #         status="IN"
-    #     )
-    #
-    #     response = self.client.put(f'/api/articles/{article_old.id}', self.data)
-    #
-    #     self.assertEqual(response.status_code, 301)
-    #     self.compare_article_with_data(article_old.id, self.data)
+    def test_update_article(self):
+        article_old = Article.objects.create(
+            title="sdfsd fsfsdfs dsd fsd f sdfs ",
+            text="ksdkjhs ksdjhksjdh kjsdksjdk jfh skdjhf",
+            like_count=42,
+            status="IN"
+        )
+
+        response = self.client.put(f'/api/articles/{article_old.id}/', self.data, 'application/json')
+
+        self.assertEqual(response.status_code, 200)
+        self.compare_article_with_data(article_old.id, self.data)
 
     def compare_article_with_data(self, article_id, data):
         article = Article.objects.get(id=article_id)
@@ -170,6 +170,20 @@ class ArticleViewTests(TestCase):
         self.assertEqual(data["text"], article.text)
         self.assertEqual(data["like_count"], article.like_count)
         self.assertEqual(data["status"], article.status)
+
+    def test_delete_article(self):
+        article_old = Article.objects.create(
+            title="sdfsd fsfsdfs dsd fsd f sdfs ",
+            text="ksdkjhs ksdjhksjdh kjsdksjdk jfh skdjhf",
+            like_count=42,
+            status="IN"
+        )
+
+        response = self.client.delete(f'/api/articles/{article_old.id}/')
+
+        self.assertEqual(response.status_code, 204)
+        with self.assertRaises(Exception):
+            Article.objects.get(id=article_old.id)
 
 class AuthorViewTest(TestCase):
     def test_author_empty(self):
