@@ -32,5 +32,239 @@
   "你为什么要翻译这个？ 做任务！": {
     "美好的": 10,
     "我已经做了一切": 0
+  },
+    "Is the sky green?": {
+    "Yes": 2,
+    "No": 98
+  },
+  "What color is the sun?": {
+    "Blue": 5,
+    "Yellow": 90,
+    "Green": 3
+  },
+  "Do fish fly?": {
+    "Yes, with wings": 1,
+    "No": 99
+  },
+  "How many fingers do you have on your foot?": {
+    "5": 7,
+    "10": 2,
+    "None": 91
+  },
+  "Can you taste the rainbow?": {
+    "Yes, always": 10,
+    "No, that's Skittles": 85
+  },
+  "What is the capital of Mars?": {
+    "M": 2,
+    "No capital": 98
+  },
+  "What is the square root of a banana?": {
+    "Banana": 1,
+    "Not a number": 99
+  },
+  "Do you speak fluent cat?": {
+    "Meow": 15,
+    "No": 80
+  },
+  "How many sides does a circle have?": {
+    "0": 10,
+    "Infinite": 15,
+    "1": 75
+  },
+  "What is the meaning of life, the universe, and everything?": {
+    "42": 99,
+    "Answer not found": 1
+  },
+  "Is the moon made of cheese?": {
+    "Yes, Swiss": 5,
+    "No": 95
+  },
+  "Can you taste water?": {
+    "Yes, it's salty": 3,
+    "No": 97
+  },
+  "What comes after the alphabet?": {
+    "Numbers": 10,
+    "Z": 5,
+    "More letters": 85
+  },
+  "Do cats dream of electric mice?": {
+    "Yes": 20,
+    "No": 80
+  },
+  "How many horns does a unicorn have?": {
+    "1": 70,
+    "5": 5,
+    "None": 25
+  },
+  "What's the square root of -1?": {
+    "i": 90,
+    "Undefined": 10
+  },
+  "Is the Earth flat?": {
+    "Yes": 3,
+    "No": 97
+  },
+  "What is the color of the wind?": {
+    "Invisible": 99,
+    "Blue": 1
+  },
+  "Can you divide by zero?": {
+    "Yes": 1,
+    "No": 99
+  },
+  "What's the capital of a circle?": {
+    "C": 2,
+    "No capital": 98
+  },
+  "Do aliens wear hats?": {
+    "Yes, always": 7,
+    "No": 93
+  },
+  "What is the speed of dark?": {
+    "Faster than light": 5,
+    "Undefined": 95
+  },
+  "Can you hear colors?": {
+    "Yes, on Sundays": 8,
+    "No": 92
+  },
+  "How many toes does a snake have?": {},
+  "Do rocks have feelings?": {
+    "Yes, they're very sensitive": 4,
+    "No": 96
+  },
+  "What's the opposite of a penguin?": {
+    "Anti-penguin": 15,
+    "Penguin": 5,
+    "None": 80
+  },
+  "Can you lick your elbow?": {
+    "Yes": 1,
+    "No": 99
+  },
+  "What's the best color for a rainbow?": {
+    "Black and white": 2,
+    "All colors": 88,
+    "None": 10
+  },
+  "Do clouds taste like marshmallows?": {
+    "Yes, toasted": 10,
+    "No": 90
+  },
+  "What's the meaning of the word 'meaningless'?": {
+    "Full of meaning": 3,
+    "Without meaning": 97
+  },
+  "How many words can a picture say?": {
+    "A thousand": 80,
+    "None": 20
+  },
+  "Is the Internet a series of tubes?": {
+    "Yes, like a giant plumbing system": 15,
+    "No": 85
+  },
+  "What is the color of a mirror?": {
+    "Reflective": 90,
+    "Gray": 5
+  },
+  "Can you pet a virtual cat?": {
+    "Yes, with a virtual hand": 20,
+    "No": 80
+  },
+  "Do fish need bicycles?": {
+    "Yes, for their daily commute": 8,
+    "No": 92
+  },
+  "What's the square root of a rainbow?": {
+    "Colorful": 10,
+    "Undefined": 90
+  },
+  "Is a tomato a fruit or a vegetable?": {
+    "Fruit": 70,
+    "Vegetable": 20,
+    "Both": 10
+  },
+  "How many legs does a spider have?": {
+    "8": 90,
+    "12": 5
+  },
+  "What is the sound of one hand clapping?": {
+    "Silence": 80,
+    "Slapping noise": 10,
+    "Impossible": 10
+  },
+  "Can you taste the internet?": {
+    "Yes, it's digital": 15,
+    "No": 85
+  },
+  "What's the speed of smell?": {
+    "Nose-dependent": 20,
+    "Undefined": 80
+  },
+  "Do ghosts like to dance?": {
+    "Yes, especially waltzes": 7,
+    "No": 93
+  },
+  "How many colors are there in the alphabet?": {
+    "26": 95,
+    "Infinite": 5
+  },
+  "Can you eat your own shadow?": {
+    "Yes, with a side of darkness": 3,
+    "No": 97
+  },
+  "What's the opposite of a refrigerator?": {
+    "Anti-fridge": 12,
+    "Oven": 8,
+    "None": 80
+  },
+  "Do birds have knees?": {
+    "Yes": 10,
+    "No": 90
+  },
+  "What's the best way to milk a unicorn?": {
+    "Very carefully": 20,
+    "Unicorns don't produce milk": 80
+  },
+  "Can you touch a rainbow?": {},
+  "What's the taste of sunshine?": {
+    "Sunny": 10,
+    "Undefined": 90
+  },
+  "Can you see with your eyes closed?": {
+    "Yes, in dreams": 18,
+    "No": 82
+  },
+  "What's the square root of a cloud?": {},
+  "Do ants sleep?": {
+    "Yes, in tiny beds": 7,
+    "No": 93
+  },
+  "What's the meaning of life, the coffee, and everything?": {
+    "42": 99,
+    "Caffeine": 1
+  },
+  "Can you ride a rainbow?": {
+    "Yes, on a unicorn": 12,
+    "No": 88
+  },
+  "What's the color of a moonless night?": {
+    "Dark": 85,
+    "Invisible": 15
+  },
+  "Can you high-five a ghost?": {
+    "Yes, but it's quite chilling": 8,
+    "No": 92
+  },
+  "What's the temperature of a thought?": {},
+  "Can you smell the internet?": {
+    "Yes, it's digital fragrance": 13,
+    "No": 87
+  },
+  "What's the speed of a snail on caffeine?": {
+    "Faster than a regular snail": 20,
+    "Caffeine doesn't affect snails": 80
   }
 }

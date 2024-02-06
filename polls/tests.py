@@ -23,9 +23,9 @@ class QuestionModelTest(TestCase):
         question = Question(pub_date=pub_date)
         self.assertFalse(question.was_published_recently())
 
-def create_question(question_text: str, days: int) -> Question:
+def create_question(question_text: str, days: int, status=Question.Status.APPROVED) -> Question:
     pub_date = timezone.now() + timezone.timedelta(days=days)
-    return Question.objects.create(question_text=question_text, pub_date=pub_date, status=Question.Status.APPROVED)
+    return Question.objects.create(question_text=question_text, pub_date=pub_date, status=status)
 
 class QuestionIndexViewTests(TestCase):
     def test_no_questions(self):
