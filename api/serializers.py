@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.serializers import ListSerializer
 
 from polls.models import Question, Choice
 from articles.models import Article, Author
@@ -12,11 +13,27 @@ class ChoiceSerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    choices = ChoiceSerializer(many=True)
+    # choices = ChoiceSerializer(many=True, read_only=True, required=False)
+    choices = ChoiceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Question
         fields = '__all__'
+
+    def validate(self, data):
+        data['choices'] = self.initial_data.get('choices', [])
+        return data
+
+    def create(self, validated_data):
+        choices = validated_data.pop('choices')
+        question = Question.objects.create(**validated_data)
+
+        new_choices = []
+        # for choice in choices:
+        #     new_choices.append(Choice.objects.create(**choice))
+
+        question.choices.set(new_choices)
+        return question
 
 #articles
 

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.test import TestCase
 from django.utils import timezone
 from polls.models import Question, Choice
@@ -10,8 +12,34 @@ class QuestionViewTests(TestCase):
     def test_emtpy_question(self):
         response = self.client.get('/api/questions/')
         self.assertEqual(response.status_code, 200)
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(data, [])
+
+    def test_create_question(self):
+        data = {
+            "question_text": "What's the meaning of the word 'meaningless'?",
+            "pub_date": "2024-01-31T11:42:16.621314Z",
+            "status": "AP",
+            "choices": [
+                {
+                    "choice_text": "Full of meaning",
+                    "votes": 3
+                },
+                {
+                    "choice_text": "Full of meaning 2 ",
+                    "votes": 42
+                },
+            ]
+        }
+
+        response = self.client.post('/api/questions/', data)
+        response_data = response.json()
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response_data['question_text'], data['question_text'])
+        entity = Question.objects.get(pk=response_data['id'])
+        self.assertEqual(entity.question_text, data['question_text'])
+        # self.assertTrue(entity.choices)
 
     def test_question_list(self):
         Question.objects.create(question_text='Text1', pub_date=timezone.now())
@@ -20,7 +48,7 @@ class QuestionViewTests(TestCase):
         response = self.client.get('/api/questions/')
         self.assertEqual(response.status_code, 200)
 
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(len(data), 2)
         self.assertEqual(data[0]['question_text'], 'Text1')
         self.assertEqual(data[1]['question_text'], 'Text2')
@@ -38,12 +66,89 @@ class QuestionViewTests(TestCase):
         data = response.json()
         self.assertEqual(data['question_text'], question.question_text)
 
+    def test_search_question(self):
+        question = Question.objects.create(question_text='Text1', pub_date=timezone.now())
+
+        response = self.client.get('/api/questions/?search=Text1')
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()['results']
+        self.assertTrue(len(data))
+        for item in data:
+            self.assertEqual(item['question_text'], question.question_text)
+
+    def test_filter_question(self):
+        Question.objects.create(question_text='Text2', pub_date=timezone.datetime(2006, 6, 1))
+        Question.objects.create(question_text='Text3', pub_date=timezone.datetime(2007, 6, 1))
+        Question.objects.create(question_text='Text1', pub_date=timezone.datetime(2005, 6, 1))
+
+        response = self.client.get('/api/questions/?ordering=pub_date')
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()['results']
+        self.assertEqual(len(data), 3)
+        self.assertEqual(data[0]['question_text'], 'Text1')
+        self.assertEqual(data[1]['question_text'], 'Text2')
+        self.assertEqual(data[2]['question_text'], 'Text3')
+
+    def test_pagination_questions(self):
+        Question.objects.create(question_text='Text1', pub_date=timezone.now())
+        Question.objects.create(question_text='Text2', pub_date=timezone.now())
+        Question.objects.create(question_text='Text3', pub_date=timezone.now())
+
+        response = self.client.get('/api/questions/?page=2&page_size=1')
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()
+        self.assertEqual(data['count'], 3)
+        self.assertTrue(data['next'].endswith('/api/questions/?page=3&page_size=1'))
+        self.assertTrue(data['previous'].endswith('/api/questions/?page_size=1'))
+        self.assertTrue(data['results'])
+
+    def test_min_choice_count(self):
+        question_1 = Question.objects.create(question_text='Text1', pub_date=timezone.now())
+        choice_1 = question_1.choices.create(choice_text='Choice 1', votes=1)
+        choice_2 = question_1.choices.create(choice_text='Choice 2', votes=1)
+        question_2 = Question.objects.create(question_text='Text2', pub_date=timezone.now())
+        choice_3 = question_2.choices.create(choice_text='Choice 3', votes=1)
+        choice_4 = question_2.choices.create(choice_text='Choice 4', votes=1)
+        choice_5 = question_2.choices.create(choice_text='Choice 5', votes=1)
+
+        response = self.client.get('/api/questions/?min_choice_count=3')
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()['results'][0]['choices']
+        self.assertEqual(len(data), 3)
+        self.assertEqual(data[0]['choice_text'], choice_3.choice_text)
+        self.assertEqual(data[1]['choice_text'], choice_4.choice_text)
+        self.assertEqual(data[2]['choice_text'], choice_5.choice_text)
+
+    def test_max_choice_count(self):
+        question_1 = Question.objects.create(question_text='Text1', pub_date=timezone.now())
+        choice_1 = question_1.choices.create(choice_text='Choice 1', votes=1)
+        choice_2 = question_1.choices.create(choice_text='Choice 2', votes=1)
+        question_2 = Question.objects.create(question_text='Text2', pub_date=timezone.now())
+        choice_3 = question_2.choices.create(choice_text='Choice 3', votes=1)
+        choice_4 = question_2.choices.create(choice_text='Choice 4', votes=1)
+        choice_5 = question_2.choices.create(choice_text='Choice 5', votes=1)
+
+        response = self.client.get('/api/questions/?max_choice_count=2')
+        self.assertEqual(response.status_code, 200)
+
+        data = response.json()['results'][0]['choices']
+        self.assertEqual(len(data), 2)
+        self.assertEqual(data[0]['choice_text'], choice_1.choice_text)
+        self.assertEqual(data[1]['choice_text'], choice_2.choice_text)
+
+
+
+
 class ChoiceViewTests(TestCase):
     def test_emtpy_choice(self):
         response = self.client.get('/api/choices/')
         self.assertEqual(response.status_code, 200)
 
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(data, [])
 
     def test_choice_list(self):
@@ -55,7 +160,7 @@ class ChoiceViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(len(data), 2)
         data_choice_1 = next(filter(lambda x: x['choice_text'] == choice_1.choice_text, data))
         self.assertIsNotNone(data_choice_1)
@@ -109,7 +214,7 @@ class ArticleViewTests(TestCase):
     def test_empty_article(self):
         response = self.client.get('/api/articles/')
         self.assertEqual(response.status_code, 200)
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(data, [])
 
     def test_article_list(self):
@@ -119,7 +224,8 @@ class ArticleViewTests(TestCase):
 
         response = self.client.get('/api/articles/')
         self.assertEqual(response.status_code, 200)
-        data = response.json()
+
+        data = response.json()['results']
         self.assertEqual(len(data), 3)
         self.assertEqual(data[0]['title'], 'article 1')
         self.assertEqual(data[1]['title'], 'article 2')
@@ -189,7 +295,7 @@ class AuthorViewTest(TestCase):
     def test_author_empty(self):
         response = self.client.get('/api/authors/')
         self.assertEqual(response.status_code, 200)
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(data, [])
 
     def test_author_list(self):
@@ -198,7 +304,8 @@ class AuthorViewTest(TestCase):
 
         response = self.client.get('/api/authors/')
         self.assertEqual(response.status_code, 200)
-        data = response.json()
+
+        data = response.json()['results']
         self.assertEqual(len(data), 2)
         self.assertEqual(data[0]['first_name'], 'name_1')
         self.assertEqual(data[0]['last_name'], 'last_name_1')
@@ -225,7 +332,7 @@ class CategoryViewTest(TestCase):
     def test_category_empty(self):
         response = self.client.get('/api/categories/')
         self.assertEqual(response.status_code, 200)
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(data, [])
 
     def test_category_list(self):
@@ -236,7 +343,7 @@ class CategoryViewTest(TestCase):
         response = self.client.get('/api/categories/')
         self.assertEqual(response.status_code, 200)
 
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(len(data), 3)
         self.assertEqual(data[0]['name'], 'Test 1')
         self.assertEqual(data[1]['name'], 'Test 2')
@@ -257,7 +364,7 @@ class ProductViewTest(TestCase):
     def test_product_empty(self):
         response = self.client.get('/api/products/')
         self.assertEqual(response.status_code, 200)
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(data, [])
 
     def test_product_list(self):
@@ -268,7 +375,7 @@ class ProductViewTest(TestCase):
         response = self.client.get('/api/products/')
         self.assertEqual(response.status_code, 200)
 
-        data = response.json()
+        data = response.json()['results']
         self.assertEqual(len(data), 2)
         self.assertEqual(data[0]['name'], 'Test 1')
         self.assertEqual(data[1]['name'], 'Test 2')
