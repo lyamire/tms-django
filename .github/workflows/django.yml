@@ -10,10 +10,6 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [3.12]
     # Service containers to run with `runner-job`
     services:
       # Label used to access the service container
@@ -34,20 +30,13 @@ jobs:
         ports:
           # Maps tcp port 5432 on service container to the host
           - 5432:5432
+    container: python:3.12
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
     - name: Run Tests
       env:
         DB_HOSTNAME: postgres
-        ALL_ENV: ${{ toJson(job.services.postgres) }}
       run: |
-        export DB_HOSTNAME=`/usr/bin/docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ job.services.postgres.id }}`
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
         python manage.py test
