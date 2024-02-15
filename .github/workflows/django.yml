@@ -17,7 +17,7 @@ jobs:
     # Service containers to run with `runner-job`
     services:
       # Label used to access the service container
-      db:
+      postgres:
         # Docker Hub image
         image: postgres
         # Provide the password for postgres
@@ -43,5 +43,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
+      env:
+        DB_HOSTNAME: postgres
       run: |
         python manage.py test
