@@ -22,7 +22,9 @@ jobs:
         image: postgres
         # Provide the password for postgres
         env:
+          POSTGRES_USER: django
           POSTGRES_PASSWORD: django
+          POSTGRES_DB: django
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -45,5 +47,7 @@ jobs:
     - name: Run Tests
       env:
         DB_HOSTNAME: postgres
+        ALL_ENV: ${{ toJson(job.services.postgres) }}
       run: |
+        export DB_HOSTNAME=`/usr/bin/docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${{ job.services.postgres.id }}`
         python manage.py test
