@@ -95,6 +95,8 @@ DATABASES = {
    }
 }
 
+if not DEBUG:
+    DATABASES['default']['HOST'] = 'db'
 
 
 # Password validation
@@ -149,7 +151,7 @@ if not DEBUG:
     CASHES = {
         "default": {
             "BACKEND": 'django.core.cache.backends.redis.RedisCache',
-            "LOCATION": "redis://127.0.0.1:6379"
+            "LOCATION": "redis://redis:6379"
         }
     }
 
