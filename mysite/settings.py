@@ -145,10 +145,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ATOMIC_REQUESTS = True
 
 if not DEBUG:
-    CASHES = {
+    CACHES = {
         "default": {
             "BACKEND": 'django.core.cache.backends.redis.RedisCache',
-            "LOCATION": "redis://redis:6379"
+            "LOCATION": os.environ.get("REDIS", default="redis://localhost:6379")
         }
     }
 

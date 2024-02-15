@@ -4,7 +4,7 @@ from .models import Article
 # Create your tests here.
 
 def create_article(title):
-    return Article.objects.create(title=title, text=title, author='<NAME>', status=Article.Status.APPROVED)
+    return Article.objects.create(title=title, text=title, status=Article.Status.APPROVED)
 
 class ArticleIndexTests(TestCase):
     def test_no_articles(self):
