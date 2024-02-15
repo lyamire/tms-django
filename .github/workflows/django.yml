@@ -1,7 +1,7 @@
 name: Django CI
 
 on:
-  repository_dispatch:
+  workflow_dispatch:
   push:
     branches: [ "main", "master" ]
   pull_request:
@@ -32,7 +32,7 @@ jobs:
           - 5432:5432
     container: python:3.12
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Run Tests
       env:
         DB_HOSTNAME: postgres
@@ -40,3 +40,22 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         python manage.py test
+
+  build:
+    runs-on: ubuntu-latest
+    needs:
+      - tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build
+        run: |
+          docker build -t lyamire/tms-django .
+      - name: Publish
+        run: |
+          docker image push lyamire/tms-django:latest
