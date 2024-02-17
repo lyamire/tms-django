@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import BadRequest
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -23,8 +24,9 @@ def get_active_questions():
     return Question.objects \
         .annotate(choice_count=Count('choices')) \
         .filter(status=Question.Status.APPROVED,
-                pub_date__lte=timezone.now(),
-                choice_count__gte=2)
+                # pub_date__lte=timezone.now(),
+                # choice_count__gte=2
+                )
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = get_active_questions().prefetch_related('choices')
@@ -52,10 +54,10 @@ def choice_vote(request: Request, question_id: int):
 @api_view(['POST'])
 def register(request):
     if User.objects.filter(email=request.data['email']).exists():
-        raise Exception('User already exists')
+        raise BadRequest('User already exists')
 
     if request.data['password'] != request.data['password2']:
-        raise Exception('Passwords do not match')
+        raise BadRequest('Passwords do not match')
 
     user = User.objects.create_user(
         request.data['username'],

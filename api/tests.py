@@ -42,8 +42,8 @@ class QuestionViewTests(TestCase):
         # self.assertTrue(entity.choices)
 
     def test_question_list(self):
-        Question.objects.create(question_text='Text1', pub_date=timezone.now())
-        Question.objects.create(question_text='Text2', pub_date=timezone.now())
+        Question.objects.create(question_text='Text1', pub_date=timezone.now(), status=Question.Status.APPROVED)
+        Question.objects.create(question_text='Text2', pub_date=timezone.now(), status=Question.Status.APPROVED)
 
         response = self.client.get('/api/questions/')
         self.assertEqual(response.status_code, 200)
@@ -58,7 +58,7 @@ class QuestionViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_question_detail(self):
-        question = Question.objects.create(question_text='Text1', pub_date=timezone.now())
+        question = Question.objects.create(question_text='Text1', pub_date=timezone.now(), status=Question.Status.APPROVED)
 
         response = self.client.get(f'/api/questions/{question.id}/')
         self.assertEqual(response.status_code, 200)
@@ -67,7 +67,7 @@ class QuestionViewTests(TestCase):
         self.assertEqual(data['question_text'], question.question_text)
 
     def test_search_question(self):
-        question = Question.objects.create(question_text='Text1', pub_date=timezone.now())
+        question = Question.objects.create(question_text='Text1', pub_date=timezone.now(), status=Question.Status.APPROVED)
 
         response = self.client.get('/api/questions/?search=Text1')
         self.assertEqual(response.status_code, 200)
@@ -78,9 +78,9 @@ class QuestionViewTests(TestCase):
             self.assertEqual(item['question_text'], question.question_text)
 
     def test_filter_question(self):
-        Question.objects.create(question_text='Text2', pub_date=timezone.datetime(2006, 6, 1))
-        Question.objects.create(question_text='Text3', pub_date=timezone.datetime(2007, 6, 1))
-        Question.objects.create(question_text='Text1', pub_date=timezone.datetime(2005, 6, 1))
+        Question.objects.create(question_text='Text2', pub_date=timezone.datetime(2006, 6, 1), status=Question.Status.APPROVED)
+        Question.objects.create(question_text='Text3', pub_date=timezone.datetime(2007, 6, 1), status=Question.Status.APPROVED)
+        Question.objects.create(question_text='Text1', pub_date=timezone.datetime(2005, 6, 1), status=Question.Status.APPROVED)
 
         response = self.client.get('/api/questions/?ordering=pub_date')
         self.assertEqual(response.status_code, 200)
@@ -92,9 +92,9 @@ class QuestionViewTests(TestCase):
         self.assertEqual(data[2]['question_text'], 'Text3')
 
     def test_pagination_questions(self):
-        Question.objects.create(question_text='Text1', pub_date=timezone.now())
-        Question.objects.create(question_text='Text2', pub_date=timezone.now())
-        Question.objects.create(question_text='Text3', pub_date=timezone.now())
+        Question.objects.create(question_text='Text1', pub_date=timezone.now(), status=Question.Status.APPROVED)
+        Question.objects.create(question_text='Text2', pub_date=timezone.now(), status=Question.Status.APPROVED)
+        Question.objects.create(question_text='Text3', pub_date=timezone.now(), status=Question.Status.APPROVED)
 
         response = self.client.get('/api/questions/?page=2&page_size=1')
         self.assertEqual(response.status_code, 200)
@@ -106,10 +106,10 @@ class QuestionViewTests(TestCase):
         self.assertTrue(data['results'])
 
     def test_min_choice_count(self):
-        question_1 = Question.objects.create(question_text='Text1', pub_date=timezone.now())
+        question_1 = Question.objects.create(question_text='Text1', pub_date=timezone.now(), status=Question.Status.APPROVED)
         choice_1 = question_1.choices.create(choice_text='Choice 1', votes=1)
         choice_2 = question_1.choices.create(choice_text='Choice 2', votes=1)
-        question_2 = Question.objects.create(question_text='Text2', pub_date=timezone.now())
+        question_2 = Question.objects.create(question_text='Text2', pub_date=timezone.now(), status=Question.Status.APPROVED)
         choice_3 = question_2.choices.create(choice_text='Choice 3', votes=1)
         choice_4 = question_2.choices.create(choice_text='Choice 4', votes=1)
         choice_5 = question_2.choices.create(choice_text='Choice 5', votes=1)
@@ -124,10 +124,10 @@ class QuestionViewTests(TestCase):
         self.assertEqual(data[2]['choice_text'], choice_5.choice_text)
 
     def test_max_choice_count(self):
-        question_1 = Question.objects.create(question_text='Text1', pub_date=timezone.now())
+        question_1 = Question.objects.create(question_text='Text1', pub_date=timezone.now(), status=Question.Status.APPROVED)
         choice_1 = question_1.choices.create(choice_text='Choice 1', votes=1)
         choice_2 = question_1.choices.create(choice_text='Choice 2', votes=1)
-        question_2 = Question.objects.create(question_text='Text2', pub_date=timezone.now())
+        question_2 = Question.objects.create(question_text='Text2', pub_date=timezone.now(), status=Question.Status.APPROVED)
         choice_3 = question_2.choices.create(choice_text='Choice 3', votes=1)
         choice_4 = question_2.choices.create(choice_text='Choice 4', votes=1)
         choice_5 = question_2.choices.create(choice_text='Choice 5', votes=1)
@@ -196,11 +196,11 @@ class ChoiceViewTests(TestCase):
         question.save()
 
         # Act
-        response = self.client.post(f'/api/questions/{question.id}/vote', data)
+        response = self.client.post(f'/api/questions/{question.id}/vote/', data)
 
         # Assert
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, f'/api/questions/{question.id}/')
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(f'/api/questions/{question.id}/', response.url)
 
 #articles
 class ArticleViewTests(TestCase):
