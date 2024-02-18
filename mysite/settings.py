@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'api',
     'rest_framework',
+    'drf_yasg',
     'corsheaders',
     'debug_toolbar',
     'articles',

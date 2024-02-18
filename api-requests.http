@@ -1,0 +1,39 @@
+###
+# API
+GET http://localhost:8000/api/
+Accept: application/json
+
+###
+# Authorization
+POST http://127.0.0.1:8000/api/token/
+Content-Type: application/json
+Accept: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+###
+# TokenRefresh
+POST http://127.0.0.1:8000/api/token/refresh/
+Content-Type: application/json
+Accept: application/json
+
+{
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcwODMzMjkwOSwiaWF0IjoxNzA4MjQ2NTA5LCJqdGkiOiJjZjIxY2EyOWE5NGY0OWVmYjZmNWUyMTg1Y2VkZjViOSIsInVzZXJfaWQiOjF9.--aN4-2Iw5ZVpOhgQ8BVnbJko8BwUDw0Q9oe6nNuLjg"
+}
+
+###
+# Registration
+POST http://127.0.0.1:8000/api/accounts/register/
+Content-Type: application/json
+
+{
+    "username": "fgh332fgh",
+    "password": "fhgghf",
+    "password2": "fhgghf",
+    "email": "fhg23g3hf@gmail.com",
+    "first_name": "fhgghf",
+    "last_name": "fhgghf"
+}
