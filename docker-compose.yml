@@ -17,10 +17,24 @@ services:
       POSTGRES_USER: django
       POSTGRES_PASSWORD: django
       POSTGRES_DB: django
-    ports:
-      - "5432:5432"
+#    ports:
+#      - "5432:5432"
     volumes:
       - database:/var/lib/postgresql
+
+  swagger:
+    # docker run -d -p 80:8080 -e SWAGGER_JSON=/app/shop-api.yml -v .:/app swaggerapi/swagger-ui
+    image: swaggerapi/swagger-ui
+    environment:
+      SWAGGER_JSON: /app/shop-api.yml
+      CORS: true
+
+    volumes:
+      - ./api/swagger:/app
+    ports:
+      - "8001:8080"
+    depends_on:
+      - app
 
 volumes:
   database:

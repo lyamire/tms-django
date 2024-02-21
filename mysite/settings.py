@@ -34,7 +34,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'api',
     'rest_framework',
-    'drf_yasg',
     'corsheaders',
     'debug_toolbar',
     'articles',
@@ -156,6 +155,7 @@ if not DEBUG:
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'http://localhost:8001',
 ]
 
 INTERNAL_IPS = [
