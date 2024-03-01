@@ -51,7 +51,7 @@ def product_details(request, product_id):
 def add_to_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
-    active_order = init_shopping_cart(request.user)
+    active_order = Profile.init_shopping_cart(request.user)
 
     entry = OrderEntry.objects.get_or_create(order=active_order, product=product)[0]
 
@@ -61,14 +61,14 @@ def add_to_cart(request, product_id):
     return redirect('shop:detail', product_id)
 
 
-def init_shopping_cart(user):
-    profile: Profile = Profile.objects.get_or_create(user=user)[0]
-    if not profile.shopping_cart:
-        profile.shopping_cart = (profile.orders.filter(status=StatusOrder.INITIAL).first()
-                                 or Order.objects.create(profile=profile, status=StatusOrder.INITIAL))
-        profile.save()
-
-    return profile.shopping_cart
+# def init_shopping_cart(user):
+#     profile: Profile = Profile.objects.get_or_create(user=user)[0]
+#     if not profile.shopping_cart:
+#         profile.shopping_cart = (profile.orders.filter(status=StatusOrder.INITIAL).first()
+#                                  or Order.objects.create(profile=profile, status=StatusOrder.INITIAL))
+#         profile.save()
+#
+#     return profile.shopping_cart
 
 
 @login_required
@@ -190,7 +190,7 @@ def reorder(request, order_id):
     for entry in order_old.order_entries.all().order_by('id'):
         old_entries.append(entry)
 
-    active_order = init_shopping_cart(request.user)
+    active_order = Profile.init_shopping_cart(request.user)
 
     for old_entry in old_entries:
         entry = OrderEntry.objects.get_or_create(order=active_order, product=old_entry.product)[0]

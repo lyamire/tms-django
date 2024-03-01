@@ -1,0 +1,481 @@
+openapi: 3.0.0
+info:
+  title: SHOP App
+  description: |
+    API provides possibility to get products, products cart, orders
+    and ability to authorization, sign in,  order products, reorder.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local host for debugging
+
+security:
+  - bearerAuth: []
+
+paths:
+  /token/:
+    post:
+      summary: Obtain authentication token
+      requestBody:
+        description: User credentials (username and password)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access:
+                    type: string
+                    description: Access token
+                  refresh:
+                    type: string
+                    description: Refresh token
+        401:
+          description: Wrong username and/or password
+
+  /token/refresh/:
+    post:
+      summary: Refresh access token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh:
+                  type: string
+                  description: Refresh token
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access:
+                    type: string
+                    description: Access token
+
+  /register/:
+    post:
+      summary: Register a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        200:
+          description: User has been created
+
+  /products/{product_id}/:
+    get:
+      summary: Get product by id
+      parameters:
+        - $ref: '#/components/parameters/product_id'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        404:
+          description: Non-existent product id
+
+  /products/:
+    get:
+      summary: Get paginated products
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/page_size'
+        - $ref: '#/components/parameters/category_id_in_query'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProducts'
+
+  /categories/{category_id}/:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/category_id_in_path'
+        - $ref: '#/components/parameters/include_products'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+
+  /categories/:
+    get:
+      summary: Get categories
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/page_size'
+        - $ref: '#/components/parameters/include_products'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCategories'
+
+  /add_to_cart/:
+    post:
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductId'
+      responses:
+        200:
+          description: Product is added to cart
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          description: Non-existent product id
+
+  /cart/:
+    get:
+      summary: Get user's cart
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  /cart/update/:
+    post:
+      summary: Update user's cart
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderUpdate'
+      responses:
+        200:
+          description: OK. Return update order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  /complete_order/:
+    post:
+      summary: Complete current user's order and sets a new empty order as cart
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  /current_user/:
+    get:
+      summary: Get current user's data
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Update current user's data
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  /current_user/orders/:
+    get:
+      summary: Get user's last orders
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrders'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+  /repeat_order/:
+    post:
+      summary: Repeat user's order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderId'
+      responses:
+        200:
+          description: OK
+        401:
+          $ref: '#/components/responses/Unauthorized'
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+
+    page_size:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+        default: 5
+
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+
+    product_id:
+      name: product_id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+    category_id_in_path:
+      name: category_id
+      in: path
+      schema:
+        type: integer
+
+    category_id_in_query:
+      name: category_id
+      in: query
+      schema:
+        type: integer
+
+    include_products:
+      name: include_products
+      in: query
+      schema:
+        type: boolean
+
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        category_id:
+          type: integer
+          example: 1
+
+    ProductId:
+      type: object
+      properties:
+        product_id:
+          type: integer
+
+    PaginatedProducts:
+      allOf:
+        - $ref: '#/components/schemas/Pagination'
+        - type: object
+          properties:
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        products:
+          type: array
+          required: false
+          items:
+            $ref: '#/components/schemas/Product'
+
+    PaginatedCategories:
+      allOf:
+        - $ref: '#/components/schemas/Pagination'
+        - type: object
+          properties:
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/Category'
+
+    UserRegistration:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        password2:
+          type: string
+
+    User:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+
+    UserUpdate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        status:
+          type: string
+        order_entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderEntry'
+
+    OrderId:
+      type: object
+      properties:
+        order_id:
+          type: integer
+
+    OrderEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_id:
+          type: integer
+        product:
+          $ref: '#/components/schemas/Product'
+
+    PaginatedOrders:
+      allOf:
+        - $ref: '#/components/schemas/Pagination'
+        - type: object
+          properties:
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/Order'
+
+    OrderUpdate:
+      type: object
+      properties:
+        clear:
+          type: boolean
+        order_entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderEntryUpdate'
+
+    OrderEntryUpdate:
+      type: object
+      properties:
+        id:
+          type: integer
+        remove:
+          type: boolean
+        count:
+          type: integer
+
+  responses:
+    Unauthorized:
+      description: Unauthorized

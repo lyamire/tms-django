@@ -107,12 +107,12 @@ class QuestionViewTests(TestCase):
 
     def test_min_choice_count(self):
         question_1 = Question.objects.create(question_text='Text1', pub_date=timezone.now(), status=Question.Status.APPROVED)
-        choice_1 = question_1.choices.create(choice_text='Choice 1', votes=1)
-        choice_2 = question_1.choices.create(choice_text='Choice 2', votes=1)
+        choice_1 = question_1.choices.create()
+        choice_2 = question_1.choices.create()
         question_2 = Question.objects.create(question_text='Text2', pub_date=timezone.now(), status=Question.Status.APPROVED)
-        choice_3 = question_2.choices.create(choice_text='Choice 3', votes=1)
-        choice_4 = question_2.choices.create(choice_text='Choice 4', votes=1)
-        choice_5 = question_2.choices.create(choice_text='Choice 5', votes=1)
+        choice_3 = question_2.choices.create()
+        choice_4 = question_2.choices.create()
+        choice_5 = question_2.choices.create()
 
         response = self.client.get('/api/questions/?min_choice_count=3')
         self.assertEqual(response.status_code, 200)
@@ -125,12 +125,12 @@ class QuestionViewTests(TestCase):
 
     def test_max_choice_count(self):
         question_1 = Question.objects.create(question_text='Text1', pub_date=timezone.now(), status=Question.Status.APPROVED)
-        choice_1 = question_1.choices.create(choice_text='Choice 1', votes=1)
-        choice_2 = question_1.choices.create(choice_text='Choice 2', votes=1)
+        choice_1 = question_1.choices.create()
+        choice_2 = question_1.choices.create()
         question_2 = Question.objects.create(question_text='Text2', pub_date=timezone.now(), status=Question.Status.APPROVED)
-        choice_3 = question_2.choices.create(choice_text='Choice 3', votes=1)
-        choice_4 = question_2.choices.create(choice_text='Choice 4', votes=1)
-        choice_5 = question_2.choices.create(choice_text='Choice 5', votes=1)
+        choice_3 = question_2.choices.create()
+        choice_4 = question_2.choices.create()
+        choice_5 = question_2.choices.create()
 
         response = self.client.get('/api/questions/?max_choice_count=2')
         self.assertEqual(response.status_code, 200)
@@ -153,8 +153,8 @@ class ChoiceViewTests(TestCase):
 
     def test_choice_list(self):
         question = Question.objects.create(question_text='Text1', pub_date=timezone.now())
-        choice_1 = question.choices.create(choice_text='Choice 1', votes=1)
-        choice_2 = question.choices.create(choice_text='Choice 2', votes=1)
+        choice_1 = question.choices.create()
+        choice_2 = question.choices.create()
 
         response = self.client.get('/api/choices/')
 
@@ -175,7 +175,7 @@ class ChoiceViewTests(TestCase):
 
     def test_choice_detail(self):
         question = Question.objects.create(question_text='Text1', pub_date=timezone.now())
-        choice = question.choices.create(choice_text='Choice 1', votes=1)
+        choice = question.choices.create()
 
         response = self.client.get(f'/api/choices/{choice.id}/')
 
@@ -189,7 +189,7 @@ class ChoiceViewTests(TestCase):
         question = Question.objects.create(question_text='Text1',
                                            pub_date=timezone.now(),
                                            status=Question.Status.APPROVED)
-        choice = question.choices.create(choice_text='Choice 1', votes=1)
+        choice = question.choices.create()
         data = {
             'choice': choice.id
         }

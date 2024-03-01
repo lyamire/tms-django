@@ -16,7 +16,7 @@ def populate_polls_database(source: str, clean_database: bool = False):
         question = Question.objects.create(question_text=item, pub_date=timezone.now())
 
         for text, votes in data[item].items():
-            choice = question.choices.create(choice_text=text, votes=votes)
+            choice = question.choices.create()
 
         question.save()
 

@@ -63,3 +63,13 @@ class Profile(models.Model):
 
    def __str__(self):
        return str(self.user)
+
+   @classmethod
+   def init_shopping_cart(cls, user: User):
+       profile: Profile = Profile.objects.get_or_create(user=user)[0]
+       if not profile.shopping_cart:
+           profile.shopping_cart = (profile.orders.filter(status=StatusOrder.INITIAL).first()
+                                    or Order.objects.create(profile=profile, status=StatusOrder.INITIAL))
+           profile.save()
+
+       return profile.shopping_cart

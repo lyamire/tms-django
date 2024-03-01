@@ -1,0 +1,212 @@
+openapi: 3.0.0
+info:
+  title: Polls App
+  description: |
+    API provides possibility to get questions, choices
+    and ability to vote for some choices.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000/api
+    description: Local host for debugging
+
+security:
+  - bearerAuth: []
+
+paths:
+  /token/:
+    post:
+      summary: Obtain authentication token
+      requestBody:
+        description: User credentials (username and password)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access:
+                    type: string
+                    description: Access token
+                  refresh:
+                    type: string
+                    description: Refresh token
+        401:
+          description: Wrong username and/or password
+
+  /token/refresh/:
+    post:
+      summary: Refresh access token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh:
+                  type: string
+                  description: Refresh token
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access:
+                    type: string
+                    description: Access token
+
+  /questions/:
+    get:
+      summary: Get all available questions
+      parameters:
+        - $ref: '#/components/parameters/ordering'
+        - $ref: '#/components/parameters/page_size'
+        - $ref: '#/components/parameters/page'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedQuestions'
+
+  /questions/{question_id}/:
+    get:
+      summary: Get question by id
+      parameters:
+        - $ref: '#/components/parameters/question_id'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+        404:
+          description: Unavailable question id
+
+  /questions/{question_id}/vote/:
+    post:
+      summary: Make a vote for some question's choice
+      parameters:
+        - $ref: '#/components/parameters/question_id'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                choice:
+                  type: integer
+                  description: Selected choice id
+      responses:
+        302:
+          description: Success. Redirect to question endpoint
+        404:
+          description: Failed. Wrong question id or choice id
+
+components:
+  parameters:
+    ordering:
+      name: ordering
+      in: query
+      schema:
+        type: string
+        enum:
+          - question_text
+          - -question_text
+          - pub_date
+          - -pub_date
+        default: -pub_date
+
+    page_size:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+        default: 5
+
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+
+    question_id:
+      name: question_id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+        question_text:
+          type: string
+        pub_date:
+          type: string
+        status:
+          type: string
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Choice'
+
+    Choice:
+      type: object
+      properties:
+        id:
+          type: integer
+        choice_text:
+          type: string
+        votes:
+          type: integer
+        question:
+          type: integer
+
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+
+    PaginatedQuestions:
+      allOf:
+        - $ref: '#/components/schemas/Pagination'
+        - type: object
+          properties:
+            results:
+              type: array
+              items:
+                $ref: '#/components/schemas/Question'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

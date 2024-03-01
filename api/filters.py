@@ -1,6 +1,6 @@
 from django.db.models import QuerySet, Count
 from django.db.models.functions import Length
-from rest_framework import filters
+from rest_framework import filters, viewsets
 from rest_framework.request import Request
 
 class ChoiceCountFilter(filters.BaseFilterBackend):
@@ -19,3 +19,12 @@ class ArticleMinTextLengthFilter(filters.BaseFilterBackend):
         if min_article_text_length is not None:
             queryset = queryset.annotate(text_length=Length('text')).filter(text_length__gte=min_article_text_length)
         return queryset
+
+
+class CategoryIDFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request: Request, queryset: QuerySet, view):
+        category_id = request.query_params.get('category_id')
+        if category_id is not None:
+            queryset = queryset.filter(category__id=category_id)
+        return queryset
+
