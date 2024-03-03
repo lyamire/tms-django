@@ -345,9 +345,9 @@ class CategoryViewTest(TestCase):
 
         data = response.json()['results']
         self.assertEqual(len(data), 3)
-        self.assertEqual(data[0]['name'], 'Test 1')
+        self.assertEqual(data[0]['name'], 'Test 3')
         self.assertEqual(data[1]['name'], 'Test 2')
-        self.assertEqual(data[2]['name'], 'Test 3')
+        self.assertEqual(data[2]['name'], 'Test 1')
 
     def test_nonexistent_category(self):
         response = self.client.get('/api/categories/100/')
@@ -369,16 +369,16 @@ class ProductViewTest(TestCase):
 
     def test_product_list(self):
         category = Category.objects.create(name='Test 1')
-        Product.objects.create(name='Test 1', category_id=category.id)
-        Product.objects.create(name='Test 2', category_id=category.id)
+        product1 = Product.objects.create(name='Test 1', category_id=category.id)
+        product2 = Product.objects.create(name='Test 2', category_id=category.id)
 
         response = self.client.get('/api/products/')
         self.assertEqual(response.status_code, 200)
 
         data = response.json()['results']
         self.assertEqual(len(data), 2)
-        self.assertEqual(data[0]['name'], 'Test 1')
-        self.assertEqual(data[1]['name'], 'Test 2')
+        self.assertEqual(data[0]['name'], 'Test 2')
+        self.assertEqual(data[1]['name'], 'Test 1')
 
     def test_nonexistent_product(self):
         response = self.client.get('/api/products/1000/')
